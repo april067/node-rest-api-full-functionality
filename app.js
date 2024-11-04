@@ -14,6 +14,7 @@ const app = express();
 app.use(morgan('tiny'));
 app.use(cors());
 app.use(express.json()); // parse application/json
+app.use(express.static('public')); //the request for static files (eg 7habits.jpg) must be searched in the public folder
 
 app.use(async (req, _, next) => {
 	const { method, url } = req;

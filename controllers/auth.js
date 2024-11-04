@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const path = require('path');
+const fs = require('fs/promises');
 const { SECRET_KEY } = process.env;
 
 const { HttpError } = require('../helpers');
@@ -23,6 +25,7 @@ const register = async (req, res) => {
 			name: newUser.name,
 			email: newUser.email,
 			subscription: newUser.subscription,
+			avatarURL: newUser.avatarURL,
 		},
 	});
 };
@@ -56,6 +59,7 @@ const login = async (req, res) => {
 			name: userWithToken.name,
 			email: userWithToken.email,
 			subscription: userWithToken.subscription,
+			avatarURL: userWithToken.avatarURL,
 		},
 		data: {
 			token,
@@ -85,9 +89,38 @@ const logout = async (req, res) => {
 	});
 };
 
+const updateAvatar = async (req, res) => {
+	const { path: tempPath, filename } = req.file;
+	const { _id, token } = req.user;
+
+	const newFilename = `${_id}__${filename}`;
+	const resultPath = path.join(__dirname, '../', 'public', 'avatars', newFilename);
+
+	await fs.rename(tempPath, resultPath);
+
+	const avatarPublicPath = path.join('avatars', newFilename);
+
+	const updatedUser = await User.findByIdAndUpdate(_id, { avatarURL: avatarPublicPath });
+
+	console.log('updatedUser :>> ', updatedUser);
+
+	res.status(200).json({
+		user: {
+			name: updatedUser.name,
+			email: updatedUser.email,
+			subscription: updatedUser.subscription,
+			avatarURL: updatedUser.avatarURL,
+		},
+		data: {
+			token,
+		},
+	});
+};
+
 module.exports = {
 	register: ctrlWrapper(register),
 	login: ctrlWrapper(login),
 	current: ctrlWrapper(current),
 	logout: ctrlWrapper(logout),
+	updateAvatar: ctrlWrapper(updateAvatar),
 };

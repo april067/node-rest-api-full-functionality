@@ -24,6 +24,10 @@ const userSchema = new Schema(
 			default: getConstants.subscriptionList[0],
 		},
 		token: String,
+		avatarURL: {
+			type: String,
+			default: getConstants.avatarDefaultPath,
+		},
 	},
 	{ versionKey: false }
 );
