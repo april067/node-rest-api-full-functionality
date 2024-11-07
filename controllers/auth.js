@@ -46,14 +46,6 @@ const login = async (req, res) => {
 	const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '12h' });
 	const userWithToken = await User.findOneAndUpdate({ email }, { token });
 
-	//FYI
-	// console.log(user._id);
-	// console.log(user.id);
-
-	// const test = await User.findOne({ id: user.id });//expect null
-	// const test = await User.findOne({ _id: user.id });//expect Object
-	// console.log(test);
-
 	res.status(200).json({
 		user: {
 			name: userWithToken.name,
