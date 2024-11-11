@@ -11,18 +11,16 @@ const { email, password } = req.body;
 
 2.) do not use Joi.scheme as a middleware because of the missing real req.body
 
-3.) const SECRET_KEY = ''; //take it from process.env because JEST doesn't see .env
-
 */
 
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const supertest = require('supertest');
+require('dotenv').config();
 
 const { login } = require('./auth');
-const DB_HOST = ''; // !!!!!!! take it from process.env because JEST doesn't see .env
-const PORT = 3000; // !!!!!!! take it from process.env because JEST doesn't see .env
+const { DB_HOST, PORT = 3000 } = process.env;
 
 const app = express();
 app.use(cors());
@@ -55,13 +53,8 @@ describe('test login controller', () => {
 			process.exit(1);
 		});
 
-	beforeAll(() => server);
-
 	test('the login controller MUST return status=200', async () => {
 		const response = await supertest(app).post('/api/auth/login');
-
-		// console.log('STATUS :>> ', response.status);
-		// console.log('RESPONSE.ERROR :>>>>>>>>>>> ', response.error);
 
 		expect(response.status).toBe(200);
 	});
