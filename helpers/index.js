@@ -1,9 +1,11 @@
+const getConstants = require('./getConstants');
 const HttpError = require('./HttpError');
 const handleMongooseError = require('./handleMongooseError');
-const getConstants = require('./getConstants');
+const sendEmail = require('./sendEmail');
 
 module.exports = {
+	getConstants,
 	HttpError,
 	handleMongooseError,
-	getConstants,
+	sendEmail,
 };

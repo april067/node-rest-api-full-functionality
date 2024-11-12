@@ -28,6 +28,14 @@ const userSchema = new Schema(
 			type: String,
 			default: getConstants.avatarDefaultPath,
 		},
+		verify: {
+			type: Boolean,
+			default: false,
+		},
+		verificationCode: {
+			type: String,
+			default: '',
+		},
 	},
 	{ versionKey: false }
 );
